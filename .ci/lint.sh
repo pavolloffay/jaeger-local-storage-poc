@@ -1,7 +1,6 @@
 #!/bin/bash
 
 GOLINT=golint
-EMPTY="[[:space:]]"
 
 command -v ${GOLINT} > /dev/null
 if [ $? != 0 ]; then

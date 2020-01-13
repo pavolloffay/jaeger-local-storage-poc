@@ -24,7 +24,7 @@ lint:
 .PHONY: security
 security:
 	@echo Security...
-	@${GOPATH}/bin/gosec -quiet -exclude=G104  ./... 2>/dev/null
+	@${GOPATH}/bin/gosec -quiet ./... 2>/dev/null
 
 .PHONY: unit-tests
 unit-tests:
