@@ -3,6 +3,8 @@ FMT_LOG=fmt.log
 
 GOPATH ?= "$(HOME)/go"
 
+UNIT_TEST_PACKAGES := $(shell go list ./pkg/...)
+
 .DEFAULT_GOAL := test
 
 .PHONY: check
@@ -29,7 +31,7 @@ security:
 .PHONY: unit-tests
 unit-tests:
 	@echo Running unit tests...
-	@go test $(VERBOSE) -cover -coverprofile=cover.out
+	@go test $(VERBOSE) $(UNIT_TEST_PACKAGES) -cover -coverprofile=cover.out
 
 .PHONY: test
 test: unit-tests
