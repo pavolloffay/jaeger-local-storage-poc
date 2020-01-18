@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	jaegerModel "github.com/jaegertracing/jaeger/model"
+
 	"github.com/pavolloffay/jaeger-local-storage-poc/pkg/model"
 )
 

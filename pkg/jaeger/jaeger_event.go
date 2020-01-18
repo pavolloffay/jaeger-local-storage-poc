@@ -5,6 +5,7 @@ import (
 	"time"
 
 	jaegerModel "github.com/jaegertracing/jaeger/model"
+
 	"github.com/pavolloffay/jaeger-local-storage-poc/pkg/model"
 )
 
