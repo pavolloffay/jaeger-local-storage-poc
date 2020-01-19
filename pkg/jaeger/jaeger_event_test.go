@@ -21,7 +21,7 @@ func TestJaegerSpan(t *testing.T) {
 		Duration:      5000,
 		Tags: jaegerModel.KeyValues{
 			jaegerModel.String("key1", "value1"),
-			jaegerModel.String("key2", "value2"),
+			jaegerModel.Bool("key2", true),
 		},
 		Process: &jaegerModel.Process{
 			ServiceName: "serviceA",
@@ -40,6 +40,8 @@ func TestJaegerSpan(t *testing.T) {
 	len := 8
 	assert.Len(t, event.Fields(), len)
 
+	restrue := byte(1)
+
 	tests := []struct {
 		fieldName  string
 		fieldType  model.FieldType
@@ -51,7 +53,7 @@ func TestJaegerSpan(t *testing.T) {
 		{fieldName: "operation", fieldType: model.StringType, fieldValue: []byte(span.OperationName)},
 		{fieldName: "duration", fieldType: model.Int64Type, fieldValue: []byte(strconv.FormatInt(span.Duration.Nanoseconds(), 10))},
 		{fieldName: "key1", fieldType: model.StringType, fieldValue: []byte("value1")},
-		{fieldName: "key2", fieldType: model.StringType, fieldValue: []byte("value2")},
+		{fieldName: "key2", fieldType: model.BooleanType, fieldValue: []byte{restrue}},
 		{fieldName: "key3", fieldType: model.StringType, fieldValue: []byte("value3")},
 	}
 

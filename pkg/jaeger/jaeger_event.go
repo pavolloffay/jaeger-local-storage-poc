@@ -57,7 +57,7 @@ func convertTag(kv *jaegerModel.KeyValue) *model.Field {
 	case jaegerModel.ValueType_STRING:
 		return model.NewField(kv.GetKey(), model.StringType, []byte(kv.GetVStr()))
 	case jaegerModel.ValueType_BOOL:
-		//fields = append(fields, model.NewField(kv.GetKey(), model.BooleanType, kv.GetVBool())
+		return model.NewField(kv.GetKey(), model.BooleanType, model.ConvBoolToBytes(kv.GetVBool()))
 	case jaegerModel.ValueType_INT64:
 		return model.NewField(kv.GetKey(), model.Int64Type, []byte(strconv.FormatInt(kv.GetVInt64(), 10)))
 	case jaegerModel.ValueType_FLOAT64:

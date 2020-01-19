@@ -12,3 +12,14 @@ type FieldType struct {
 	// FixedLength If fixed length field, otherwise -1
 	FixedLength int
 }
+
+// ConvBoolToBytes convert the boolean value to a byte array
+func ConvBoolToBytes(value bool) []byte {
+	b := make([]byte, 1)
+	if value {
+		b[0] = 1
+	} else {
+		b[0] = 0
+	}
+	return b
+}
