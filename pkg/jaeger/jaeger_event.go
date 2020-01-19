@@ -45,6 +45,13 @@ func NewEvent(span *jaegerModel.Span) model.Event {
 		}
 	}
 
+	// Creeate field for the span data
+	spanData, err := span.Marshal()
+	if err != nil {
+		// TODO: Decide how to handle? Log it or return nil
+	}
+	fields = append(fields, model.NewField("span", model.BinaryType, spanData))
+
 	return &Event{
 		tenant:    tenant,
 		timestamp: span.GetStartTime(),

@@ -37,10 +37,11 @@ func TestJaegerSpan(t *testing.T) {
 	assert.Equal(t, "jaegerspan", event.Type())
 	assert.Equal(t, time.Unix(0, 1000), event.Timestamp())
 
-	len := 8
+	len := 9
 	assert.Len(t, event.Fields(), len)
 
 	restrue := byte(1)
+	spanData, _ := span.Marshal()
 
 	tests := []struct {
 		fieldName  string
@@ -55,6 +56,7 @@ func TestJaegerSpan(t *testing.T) {
 		{fieldName: "key1", fieldType: model.StringType, fieldValue: []byte("value1")},
 		{fieldName: "key2", fieldType: model.BooleanType, fieldValue: []byte{restrue}},
 		{fieldName: "key3", fieldType: model.StringType, fieldValue: []byte("value3")},
+		{fieldName: "span", fieldType: model.BinaryType, fieldValue: spanData},
 	}
 
 	// Confirm a test entry exists for each field
