@@ -32,7 +32,8 @@ func TestJaegerSpan(t *testing.T) {
 		},
 	}
 
-	event := NewEvent(span)
+	event, err := NewEvent(span)
+	assert.NoError(t, err)
 	assert.Equal(t, "tenant1", event.Tenant())
 	assert.Equal(t, "jaegerspan", event.Type())
 	assert.Equal(t, time.Unix(0, 1000), event.Timestamp())
@@ -43,40 +44,17 @@ func TestJaegerSpan(t *testing.T) {
 	restrue := byte(1)
 	spanData, _ := span.Marshal()
 
-	tests := []struct {
-		fieldName  string
-		fieldType  model.FieldType
-		fieldValue []byte
-	}{
-		{fieldName: "traceId", fieldType: model.StringType, fieldValue: []byte(span.TraceID.String())},
-		{fieldName: "spanId", fieldType: model.StringType, fieldValue: []byte(span.SpanID.String())},
-		{fieldName: "service", fieldType: model.StringType, fieldValue: []byte(span.Process.ServiceName)},
-		{fieldName: "operation", fieldType: model.StringType, fieldValue: []byte(span.OperationName)},
-		{fieldName: "duration", fieldType: model.Int64Type, fieldValue: []byte(strconv.FormatInt(span.Duration.Nanoseconds(), 10))},
-		{fieldName: "key1", fieldType: model.StringType, fieldValue: []byte("value1")},
-		{fieldName: "key2", fieldType: model.BooleanType, fieldValue: []byte{restrue}},
-		{fieldName: "key3", fieldType: model.StringType, fieldValue: []byte("value3")},
-		{fieldName: "span", fieldType: model.BinaryType, fieldValue: spanData},
-	}
-
-	// Confirm a test entry exists for each field
-	assert.Len(t, tests, len)
-
-	for _, test := range tests {
-		found := false
-		for _, field := range event.Fields() {
-			if field.Name() != test.fieldName {
-				continue
-			}
-			assert.Equal(t, test.fieldType, field.Type())
-			assert.Equal(t, test.fieldValue, field.Value())
-			found = true
-			break
-		}
-		if !found {
-			assert.Fail(t, "Field not found", "Field name %s", test.fieldName)
-		}
-	}
+	fields := make([]*model.Field, 0)
+	fields = append(fields, model.NewField("__traceId", model.StringType, []byte(span.TraceID.String())),
+		model.NewField("__spanId", model.StringType, []byte(span.SpanID.String())),
+		model.NewField("__service", model.StringType, []byte(span.Process.ServiceName)),
+		model.NewField("__operation", model.StringType, []byte(span.OperationName)),
+		model.NewField("__duration", model.Int64Type, []byte(strconv.FormatInt(span.Duration.Nanoseconds(), 10))),
+		model.NewField("key3", model.StringType, []byte("value3")),
+		model.NewField("key1", model.StringType, []byte("value1")),
+		model.NewField("key2", model.BooleanType, []byte{restrue}),
+		model.NewField("__span", model.BinaryType, spanData))
+	assert.Equal(t, fields, event.Fields())
 }
 
 func TestJaegerSpanNoTenant(t *testing.T) {
@@ -91,6 +69,7 @@ func TestJaegerSpanNoTenant(t *testing.T) {
 		},
 	}
 
-	event := NewEvent(span)
+	event, err := NewEvent(span)
+	assert.NoError(t, err)
 	assert.Equal(t, "", event.Tenant())
 }

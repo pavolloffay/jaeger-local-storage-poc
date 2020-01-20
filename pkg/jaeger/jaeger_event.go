@@ -17,13 +17,13 @@ type Event struct {
 }
 
 // NewEvent creates an event from a Jaeger span
-func NewEvent(span *jaegerModel.Span) model.Event {
+func NewEvent(span *jaegerModel.Span) (model.Event, error) {
 	fields := make([]*model.Field, 0)
-	fields = append(fields, model.NewField("traceId", model.StringType, []byte(span.TraceID.String())))
-	fields = append(fields, model.NewField("spanId", model.StringType, []byte(span.SpanID.String())))
-	fields = append(fields, model.NewField("service", model.StringType, []byte(span.Process.ServiceName)))
-	fields = append(fields, model.NewField("operation", model.StringType, []byte(span.OperationName)))
-	fields = append(fields, model.NewField("duration", model.Int64Type, []byte(strconv.FormatInt(span.Duration.Nanoseconds(), 10))))
+	fields = append(fields, model.NewField("__traceId", model.StringType, []byte(span.TraceID.String())))
+	fields = append(fields, model.NewField("__spanId", model.StringType, []byte(span.SpanID.String())))
+	fields = append(fields, model.NewField("__service", model.StringType, []byte(span.Process.ServiceName)))
+	fields = append(fields, model.NewField("__operation", model.StringType, []byte(span.OperationName)))
+	fields = append(fields, model.NewField("__duration", model.Int64Type, []byte(strconv.FormatInt(span.Duration.Nanoseconds(), 10))))
 
 	// Iterate through process tags - intercept tenant separately
 	tenant := ""
@@ -45,18 +45,17 @@ func NewEvent(span *jaegerModel.Span) model.Event {
 		}
 	}
 
-	// Creeate field for the span data
+	// Create field for the span data
 	spanData, err := span.Marshal()
-	if err != nil {
-		// TODO: Decide how to handle? Log it or return nil
+	if err == nil {
+		fields = append(fields, model.NewField("__span", model.BinaryType, spanData))
 	}
-	fields = append(fields, model.NewField("span", model.BinaryType, spanData))
 
 	return &Event{
 		tenant:    tenant,
 		timestamp: span.GetStartTime(),
 		fields:    fields,
-	}
+	}, err
 }
 
 func convertTag(kv *jaegerModel.KeyValue) *model.Field {
