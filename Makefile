@@ -29,7 +29,7 @@ security:
 .PHONY: unit-tests
 unit-tests:
 	@echo Running unit tests...
-	@go test $(VERBOSE) -cover -coverprofile=cover.out
+	@go test $(VERBOSE) ./pkg/... -cover -coverprofile=cover.out
 
 .PHONY: test
 test: unit-tests

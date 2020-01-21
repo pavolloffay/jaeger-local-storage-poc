@@ -3,6 +3,9 @@ module github.com/pavolloffay/jaeger-local-storage-poc
 go 1.13
 
 require (
-	github.com/securego/gosec v0.0.0-20200106085552-9cb83e10afad // indirect
-	golang.org/x/tools v0.0.0-20200110213125-a7a6caa82ab2 // indirect
+	github.com/gogo/googleapis v1.3.2 // indirect
+	github.com/golang/protobuf v1.3.2 // indirect
+	github.com/jaegertracing/jaeger v1.16.0
+	github.com/opentracing/opentracing-go v1.1.0 // indirect
+	github.com/stretchr/testify v1.4.0
 )
