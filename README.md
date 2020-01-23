@@ -6,6 +6,12 @@
 This repository is being used to experiment with a columnar based local storage approach initially focused on
 storing tracing data from [Jaeger](https://www.jaegertracing.io/).
 
+## Architecture
+
+The initial architecture is:
+
+![Proof of Concept Architecture](JaegerColumnarPoC.png)
+
 ## License
   
 [Apache 2.0 License](./LICENSE).
